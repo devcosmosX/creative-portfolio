@@ -101,13 +101,9 @@ export default function CinematicHero() {
   const titleY = useTransform(scrollYProgress, [0.05, 0.15], ["0%", "-100%"]);
   const titleOpacity = useTransform(scrollYProgress, [0.1, 0.15], [1, 0]);
 
-  // Phase 2 (0.2 to 0.45): "About Me" segment
-  const aboutY = useTransform(scrollYProgress, [0.2, 0.25, 0.4, 0.45], ["100%", "0%", "0%", "-100%"]);
-  const aboutOpacity = useTransform(scrollYProgress, [0.2, 0.25, 0.4, 0.45], [0, 1, 1, 0]);
-
-  // Phase 3 (0.5 to 0.9): "Skills & Stack" segment
-  const skillsY = useTransform(scrollYProgress, [0.5, 0.55, 0.85, 0.9], ["100%", "0%", "0%", "-100%"]);
-  const skillsOpacity = useTransform(scrollYProgress, [0.5, 0.55, 0.85, 0.9], [0, 1, 1, 0]);
+  // Phase 2 (0.2 to 0.95): "About Me" segment elegantly holds the screen until the Canvas ends
+  const aboutY = useTransform(scrollYProgress, [0.2, 0.25, 0.9, 0.95], ["100%", "0%", "0%", "0%"]);
+  const aboutOpacity = useTransform(scrollYProgress, [0.2, 0.25, 0.9, 0.95], [0, 1, 1, 0]);
 
   return (
     // We make the body exact 500vh to ensure it is the ONLY part of the website locking sequence

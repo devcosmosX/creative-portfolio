@@ -28,7 +28,7 @@ export default function Footer() {
           transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
           className="text-white/40 tracking-[0.3em] text-sm md:text-base uppercase mb-6"
         >
-          Let's Work Together
+          Let&apos;s Work Together
         </motion.p>
         
         <motion.a
