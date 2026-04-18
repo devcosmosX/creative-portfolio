@@ -128,15 +128,6 @@ export default function Projects() {
       */}
       <HoverModal modal={modal} projects={PROJECTS} />
 
-      {/* Footer */}
-      <footer className="mt-40 border-t border-white/10 pt-12 max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center text-white/40 text-sm">
-        <p>&copy; {new Date().getFullYear()} Ghansham Gavande.</p>
-        <div className="flex gap-8 mt-4 md:mt-0 font-medium tracking-wide">
-          <a href="#" className="hover:text-white transition-colors">Twitter</a>
-          <a href="#" className="hover:text-white transition-colors">LinkedIn</a>
-          <a href="#" className="hover:text-white transition-colors">GitHub</a>
-        </div>
-      </footer>
     </section>
   );
 }

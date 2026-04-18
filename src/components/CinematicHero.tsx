@@ -123,11 +123,7 @@ export default function CinematicHero() {
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black via-transparent to-black/30" />
         <div className="pointer-events-none absolute inset-0 bg-black/20" /> {/* Slight dark wash */}
 
-        {/* Global Nav (Static) */}
-        <nav className="absolute top-0 w-full p-8 flex justify-between items-center z-50">
-          <span className="text-xl font-bold tracking-tighter">GG.</span>
-          <a href="mailto:hello@example.com" className="text-sm font-medium tracking-widest uppercase border-b border-white/30 pb-1">Let's Connect</a>
-        </nav>
+        {/* Global Nav removed and handled in absolute layout wrapper */}
 
         {/* ======================= SCROLL-DRIVEN CONTENT LAYERS ======================= */}
 
@@ -160,18 +156,7 @@ export default function CinematicHero() {
           </p>
         </motion.div>
 
-        {/* 3. Experience Area */}
-        <motion.div 
-            style={{ y: skillsY, opacity: skillsOpacity }}
-            className="absolute inset-x-8 bottom-24 flex flex-col items-start justify-end text-left pointer-events-none"
-        >
-          <p className="text-sm tracking-[0.2em] text-white/50 mb-4 uppercase font-medium border-l-2 border-white/30 pl-4">Experience</p>
-          <h2 className="text-4xl md:text-6xl font-semibold text-white leading-[1.1] drop-shadow-2xl mix-blend-plus-lighter">
-            Currently at
-            <br />
-            <span className="text-blue-400 font-bold tracking-tight">IBM</span>
-          </h2>
-        </motion.div>
+        {/* The Experience block has been extracted and elevated to its own dedicated component */}
 
         {/* Scroll Indicator (Static) */}
         <div className="absolute bottom-8 w-full flex flex-col items-center z-50">
