@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import SmoothScroll from "@/components/SmoothScroll";
 import Navbar from "@/components/Navbar";
+import ContactModal from "@/components/ContactModal";
 import "./globals.css";
 
 const inter = Inter({
@@ -21,9 +22,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${inter.variable} antialiased`} suppressHydrationWarning>
-      <body className="bg-[#121212] min-h-screen">
+      <body className="bg-[#121212] min-h-screen" suppressHydrationWarning>
         <SmoothScroll>
           <Navbar />
+          <ContactModal />
           {children}
         </SmoothScroll>
       </body>

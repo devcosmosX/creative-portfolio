@@ -19,7 +19,7 @@ export default function Navbar() {
         {["About", "Work", "Contact"].map((item) => (
           <a
             key={item}
-            href={item === "Contact" ? "mailto:ghanshamgavande49@gmail.com" : `#${item.toLowerCase()}`}
+            href={`#${item.toLowerCase()}`}
             className="text-[10px] md:text-xs font-semibold tracking-[0.3em] uppercase text-white/60 hover:text-white transition-colors"
           >
             {item}

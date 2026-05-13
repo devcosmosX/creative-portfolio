@@ -8,16 +8,14 @@ interface ProjectRowProps {
   index: number;
   title: string;
   category: string;
-  url: string;
+  slug: string;
   setModal: React.Dispatch<React.SetStateAction<{ active: boolean; index: number }>>;
 }
 
-export default function ProjectRow({ index, title, category, url, setModal }: ProjectRowProps) {
+export default function ProjectRow({ index, title, category, slug, setModal }: ProjectRowProps) {
   return (
     <Link
-      href={url}
-      target="_blank"
-      rel="noopener noreferrer"
+      href={`/projects/${slug}`}
       onMouseEnter={() => setModal({ active: true, index })}
       onMouseLeave={() => setModal({ active: false, index })}
       className="group flex w-full items-center justify-between border-t border-white/5 py-12 px-4 transition-all duration-500 hover:opacity-100 hover:bg-white/[0.02]"

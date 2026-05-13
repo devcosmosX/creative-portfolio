@@ -5,53 +5,7 @@ import { motion } from "framer-motion";
 import ProjectRow from "./ProjectRow";
 import HoverModal from "./HoverModal";
 
-import image1 from "../image/image-1.png";
-import image2 from "../image/image-2.png";
-import image3 from "../image/image-3.png";
-import image4 from "../image/image-4.png";
-
-const PROJECTS = [
-  {
-    id: 1,
-    title: "SKITRO",
-    category: "Full Stack Application",
-    slug: "skitro",
-    url: "https://v0-skitro.vercel.app/",
-    date: "2023",
-    color: "#2C3E50", 
-    image: image1.src,
-  },
-  {
-    id: 2,
-    title: "COGNITOFLOW",
-    category: "Web Application",
-    slug: "cognitoflow",
-    url: "https://cognitoflow.framer.ai/",
-    date: "2023",
-    color: "#8E44AD", 
-    image: image2.src,
-  },
-  {
-    id: 3,
-    title: "LUMIERE",
-    category: "Storefront",
-    slug: "lumiere",
-    url: "https://v0-luxury-beauty-storefront.vercel.app/",
-    date: "2022",
-    color: "#16A085", 
-    image: image3.src,
-  },
-  {
-    id: 4,
-    title: "PREMIERTECH",
-    category: "Agency Landing",
-    slug: "premiertech",
-    url: "https://premiertechagency.netlify.app/",
-    date: "2021",
-    color: "#C0392B", 
-    image: image4.src,
-  },
-];
+import { PROJECTS } from "@/lib/projects";
 
 export default function Projects() {
   const [modal, setModal] = useState({ active: false, index: 0 });
@@ -113,12 +67,28 @@ export default function Projects() {
               index={idx}
               title={project.title}
               category={project.category}
-              url={project.url}
+              slug={project.slug}
               setModal={setModal}
             />
           ))}
           {/* Bottom border to close the list loop */}
           <div className="border-t border-white/5 w-full"></div>
+        </div>
+
+        {/* Big "More Work" CTA Button */}
+        <div className="mt-24 flex justify-center">
+          <motion.a 
+            href="#"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            className="group relative flex h-40 w-40 items-center justify-center rounded-full border border-white/10 bg-white/5 overflow-hidden transition-colors hover:bg-white"
+          >
+            {/* Magnetic/Hover Fill effect */}
+            <div className="absolute inset-0 translate-y-[100%] bg-white transition-transform duration-500 ease-[cubic-bezier(0.76,0,0.24,1)] group-hover:translate-y-0" />
+            <span className="relative z-10 text-xs font-bold uppercase tracking-widest text-white group-hover:text-black transition-colors duration-500">
+              More Work
+            </span>
+          </motion.a>
         </div>
       </div>
       

@@ -1,8 +1,8 @@
 "use client";
 
-import React, { useEffect, useRef } from "react";
-import { motion } from "framer-motion";
-import gsap from "gsap";
+import React, { useEffect } from "react";
+import { motion, useMotionValue, useSpring } from "framer-motion";
+import Image from "next/image";
 
 const scaleAnimation = {
   initial: { scale: 0, x: "-50%", y: "-50%" },
@@ -28,50 +28,46 @@ interface HoverModalProps {
 export default function HoverModal({ modal, projects }: HoverModalProps) {
   const { active, index } = modal;
 
-  const modalContainer = useRef<HTMLDivElement>(null);
-  const cursor = useRef<HTMLDivElement>(null);
-  const cursorLabel = useRef<HTMLDivElement>(null);
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+
+  const containerX = useSpring(mouseX, { damping: 30, stiffness: 200, mass: 0.8 });
+  const containerY = useSpring(mouseY, { damping: 30, stiffness: 200, mass: 0.8 });
+
+  const cursorX = useSpring(mouseX, { damping: 25, stiffness: 300, mass: 0.5 });
+  const cursorY = useSpring(mouseY, { damping: 25, stiffness: 300, mass: 0.5 });
+
+  const labelX = useSpring(mouseX, { damping: 20, stiffness: 400, mass: 0.4 });
+  const labelY = useSpring(mouseY, { damping: 20, stiffness: 400, mass: 0.4 });
 
   useEffect(() => {
-    // Move Container
-    const xMoveContainer = gsap.quickTo(modalContainer.current, "left", { duration: 0.8, ease: "power3" });
-    const yMoveContainer = gsap.quickTo(modalContainer.current, "top", { duration: 0.8, ease: "power3" });
-    
-    // Move cursor
-    const xMoveCursor = gsap.quickTo(cursor.current, "left", { duration: 0.5, ease: "power3" });
-    const yMoveCursor = gsap.quickTo(cursor.current, "top", { duration: 0.5, ease: "power3" });
-    
-    // Move cursor label
-    const xMoveCursorLabel = gsap.quickTo(cursorLabel.current, "left", { duration: 0.45, ease: "power3" });
-    const yMoveCursorLabel = gsap.quickTo(cursorLabel.current, "top", { duration: 0.45, ease: "power3" });
+    // Set initial position immediately if window exists
+    if (typeof window !== "undefined") {
+      mouseX.set(window.innerWidth / 2);
+      mouseY.set(window.innerHeight / 2);
+    }
 
     const handleMouseMove = (e: MouseEvent) => {
       const { clientX, clientY } = e;
-      xMoveContainer(clientX);
-      yMoveContainer(clientY);
-      xMoveCursor(clientX);
-      yMoveCursor(clientY);
-      xMoveCursorLabel(clientX);
-      yMoveCursorLabel(clientY);
+      mouseX.set(clientX);
+      mouseY.set(clientY);
     };
 
     window.addEventListener("mousemove", handleMouseMove);
     return () => {
       window.removeEventListener("mousemove", handleMouseMove);
     };
-  }, []);
+  }, [mouseX, mouseY]);
 
   return (
     <>
       <motion.div
-        ref={modalContainer}
         variants={scaleAnimation}
         initial="initial"
         animate={active ? "enter" : "closed"}
         className="pointer-events-none fixed z-50 flex h-[350px] w-[400px] items-center justify-center overflow-hidden bg-transparent"
-        style={{ left: "50%", top: "50%" }}
+        style={{ left: containerX, top: containerY }}
       >
-        {/* Slider container that moves up/down to show the active project block */}
         <div
           className="absolute h-full w-full transition-all duration-500 cubic-bezier(0.76, 0, 0.24, 1)"
           style={{ top: `${index * -100}%` }}
@@ -82,10 +78,12 @@ export default function HoverModal({ modal, projects }: HoverModalProps) {
               className="relative flex h-full w-full items-center justify-center"
               style={{ backgroundColor: project.color }}
             >
-              <img 
+              <Image 
                 src={project.image} 
                 alt={`${project.title} project showcase from sequence`} 
-                className="h-full w-full object-cover"
+                fill
+                sizes="(max-width: 768px) 100vw, 400px"
+                className="object-cover"
               />
             </div>
           ))}
@@ -93,20 +91,18 @@ export default function HoverModal({ modal, projects }: HoverModalProps) {
       </motion.div>
 
       <motion.div
-        ref={cursor}
         className="pointer-events-none fixed z-[51] flex h-20 w-20 items-center justify-center rounded-full bg-[#404040]"
         variants={scaleAnimation}
         initial="initial"
         animate={active ? "enter" : "closed"}
-        style={{ left: "50%", top: "50%" }}
+        style={{ left: cursorX, top: cursorY }}
       />
       <motion.div
-        ref={cursorLabel}
         className="pointer-events-none fixed z-[52] flex h-20 w-20 items-center justify-center bg-transparent font-medium tracking-widest text-white text-xs uppercase"
         variants={scaleAnimation}
         initial="initial"
         animate={active ? "enter" : "closed"}
-        style={{ left: "50%", top: "50%" }}
+        style={{ left: labelX, top: labelY }}
       >
         View
       </motion.div>

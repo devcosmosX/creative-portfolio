@@ -36,7 +36,7 @@ export default function Footer() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-50px" }}
           transition={{ duration: 1.2, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-          href="mailto:ghanshamgavande49@gmail.com"
+          href="#contact"
           className="text-5xl md:text-7xl lg:text-9xl font-black text-white hover:text-white/80 transition-transform hover:scale-[1.02] duration-500 tracking-tighter"
         >
           Get in touch

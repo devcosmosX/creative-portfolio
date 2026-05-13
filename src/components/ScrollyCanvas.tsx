@@ -25,9 +25,9 @@ const ScrollyCanvas = () => {
     const loadedImages: HTMLImageElement[] = [];
     for (let i = 0; i < FRAME_COUNT; i++) {
       const img = new Image();
-      // Pad index to match filename format: frame_000_delay-0.062s.png
+      // Pad index to match filename format: frame_000_delay-0.062s.webp
       const num = i.toString().padStart(3, "0");
-      img.src = `/sequence/frame_${num}_delay-0.062s.png`;
+      img.src = `/sequence/frame_${num}_delay-0.062s.webp`;
       loadedImages.push(img);
     }
     setImages(loadedImages);

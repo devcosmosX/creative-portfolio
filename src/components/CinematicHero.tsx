@@ -1,6 +1,7 @@
 "use client";
 import React, { useEffect, useRef, useState, useMemo } from "react";
 import { useScroll, useTransform, useMotionValueEvent, motion } from "framer-motion";
+import Image from "next/image";
 
 const FRAME_COUNT = 128; 
 
@@ -18,16 +19,49 @@ export default function CinematicHero() {
   const currentFrameRef = useRef(-1);
   const [images, setImages] = useState<HTMLImageElement[]>([]);
 
-  // Preload images into memory immediately on mount
+  // Preload images optimally to prevent network blocking on mount
   useEffect(() => {
-    const loadedImages: HTMLImageElement[] = [];
-    for (let i = 0; i < FRAME_COUNT; i++) {
-        const img = new Image();
-        const num = i.toString().padStart(3, "0");
-        img.src = `/sequence/frame_${num}_delay-0.062s.png`;
-        loadedImages.push(img);
+    const loadedImages: HTMLImageElement[] = new Array(FRAME_COUNT);
+    
+    // 1. Critical Path: Load first frame immediately for fast LCP
+    const firstImg = new window.Image();
+    firstImg.src = `/sequence/frame_000_delay-0.062s.webp`;
+    firstImg.decode().then(() => {
+      loadedImages[0] = firstImg;
+      setImages([...loadedImages]);
+    }).catch(() => {
+      loadedImages[0] = firstImg;
+      setImages([...loadedImages]);
+    });
+
+    // 2. Deferred Path: Load the remaining frames when browser is idle
+    const preloadRest = async () => {
+      const batchSize = 10;
+      for (let i = 1; i < FRAME_COUNT; i += batchSize) {
+        const promises = [];
+        for (let j = i; j < Math.min(i + batchSize, FRAME_COUNT); j++) {
+          const img = new window.Image();
+          const num = j.toString().padStart(3, "0");
+          img.src = `/sequence/frame_${num}_delay-0.062s.webp`;
+          promises.push(
+            img.decode().then(() => {
+              loadedImages[j] = img;
+            }).catch(() => {
+              loadedImages[j] = img;
+            })
+          );
+        }
+        await Promise.all(promises);
+        setImages([...loadedImages]);
+        await new Promise(resolve => setTimeout(resolve, 50)); // Yield to main thread
+      }
+    };
+
+    if (typeof window !== "undefined" && 'requestIdleCallback' in window) {
+      window.requestIdleCallback(() => { preloadRest(); }, { timeout: 2000 });
+    } else {
+      setTimeout(preloadRest, 500); // Fallback for Safari
     }
-    setImages(loadedImages);
   }, []);
 
   const drawImage = (ctx: CanvasRenderingContext2D, img: HTMLImageElement, width: number, height: number) => {
@@ -113,6 +147,17 @@ export default function CinematicHero() {
       <div className="sticky top-0 h-screen w-full overflow-hidden bg-black text-white selection:bg-white/30">
         
         {/* Background Film Layer */}
+        
+        {/* LCP Optimization: Render the first frame natively so the browser preload scanner finds it immediately */}
+        <Image 
+          src="/sequence/frame_000_delay-0.062s.webp"
+          alt="Ghansham Gavande Portfolio Hero"
+          fill
+          priority
+          className="object-cover opacity-80"
+          sizes="100vw"
+        />
+
         <canvas ref={canvasRef} className="absolute inset-0 h-full w-full block object-cover opacity-80" />
         
         {/* Cinematic Vignette/Gradient Layer */}
