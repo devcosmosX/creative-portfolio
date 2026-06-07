@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import Link from "next/link";
 import { ArrowLeft, ArrowUpRight } from "lucide-react";
 import { motion, useScroll, useTransform } from "framer-motion";
@@ -29,6 +29,7 @@ interface ProjectPageClientProps {
 
 export default function ProjectPageClient({ project, nextProject }: ProjectPageClientProps) {
   const heroRef = useRef<HTMLDivElement>(null);
+  const [showFloatingButton, setShowFloatingButton] = useState(false);
 
   const { scrollYProgress } = useScroll({
     target: heroRef,
@@ -38,36 +39,50 @@ export default function ProjectPageClient({ project, nextProject }: ProjectPageC
   const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
   const scale = useTransform(scrollYProgress, [0, 0.5], [1, 0.95]);
 
+  useEffect(() => {
+    const handleScroll = () => {
+      setShowFloatingButton(window.scrollY > 300);
+    };
+    
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   return (
     <main className="min-h-screen bg-[#F5F5F5] text-black selection:bg-black/20">
       
-      {/* NAVIGATION */}
-      <nav className="fixed top-0 left-0 right-0 z-50 px-6 lg:px-12 py-6 flex items-center justify-between bg-[#F5F5F5]/90 backdrop-blur-lg border-b border-black/5">
-        <Link
-          href="/"
-          className="group inline-flex items-center gap-2 text-black/50 hover:text-black transition-all duration-300 text-sm font-medium"
-        >
-          <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform duration-300" />
-          <span>Back</span>
-        </Link>
-        
-        <a
-          href={project.url}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="group inline-flex items-center gap-2 px-5 py-2.5 bg-black text-white rounded-full text-sm font-medium transition-all duration-300 hover:bg-black/90 hover:gap-3"
-        >
-          <span>Visit Live Site</span>
-          <ArrowUpRight className="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform duration-300" />
-        </a>
-      </nav>
-
+      {/* Floating Visit Live Site Button */}
+      <motion.a
+        href={project.url}
+        target="_blank"
+        rel="noopener noreferrer"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{
+          opacity: showFloatingButton ? 1 : 0,
+          y: showFloatingButton ? 0 : 20,
+          pointerEvents: showFloatingButton ? 'auto' : 'none'
+        }}
+        transition={{ duration: 0.3 }}
+        className="fixed bottom-8 right-8 z-50 group inline-flex items-center gap-2 px-6 py-3 bg-black text-white rounded-full text-sm font-semibold shadow-2xl transition-all duration-300 hover:bg-black/90 hover:scale-105 hover:shadow-3xl"
+      >
+        <span>Visit Live Site</span>
+        <ArrowUpRight className="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform duration-300" />
+      </motion.a>
+      
       {/* HERO SECTION */}
-      <motion.div 
+      <motion.div
         ref={heroRef}
         style={{ opacity, scale }}
-        className="relative h-screen flex items-center justify-center px-6 lg:px-12 pt-24"
+        className="relative h-screen flex items-center justify-center px-6 lg:px-12 pt-32"
       >
+        {/* Back Button - Positioned below main nav */}
+        <Link
+          href="/"
+          className="group absolute top-24 left-6 lg:left-12 inline-flex items-center gap-2 text-black/50 hover:text-black transition-all duration-300 text-sm font-medium z-20"
+        >
+          <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform duration-300" />
+          <span>Back to Projects</span>
+        </Link>
         <div className="max-w-[1400px] w-full">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
